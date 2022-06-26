@@ -1,5 +1,7 @@
+import Modal from "src/components/Modal";
+
 function Create() {
-  return <div>Create</div>;
+  return <Modal>Create</Modal>;
 }
 
 export default Create;

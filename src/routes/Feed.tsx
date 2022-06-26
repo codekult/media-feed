@@ -1,5 +1,5 @@
+import PrivateRoute from "src/containers/PrivateRoute";
 import FeedContainer from "src/containers/Feed";
-import PrivateRoute from "src/components/PrivateRoute";
 
 function Feed() {
   return (

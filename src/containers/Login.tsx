@@ -1,5 +1,7 @@
-// import { useNavigate, useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { User } from "firebase/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Container,
   Paper,
@@ -13,13 +15,39 @@ import {
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 
+import { LoginFormSchema, LoginFormData } from "src/schema/forms";
+import { useAuth } from "src/hooks/useAuth";
+
 function Login() {
-  // let navigate = useNavigate();
-  // let location = useLocation();
+  const navigate = useNavigate();
 
-  // let from = location.state?.from?.pathname || "/";
+  const { signInWithEmail, signInWithFacebook, signInWithGoogle } = useAuth();
 
-  // navigate(from, { replace: true });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginFormSchema),
+  });
+
+  async function onSubmit(data: LoginFormData) {
+    try {
+      await signInWithEmail(data);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function loginWithProvider(signInWithProvider: () => Promise<User>) {
+    try {
+      await signInWithProvider();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Container
@@ -36,6 +64,7 @@ function Login() {
       <Paper
         component="form"
         elevation={3}
+        onSubmit={handleSubmit(onSubmit)}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -47,29 +76,59 @@ function Login() {
       >
         <Typography variant="body1">Login</Typography>
 
-        <TextField fullWidth variant="outlined" type="text" label="Username" />
         <TextField
           fullWidth
-          variant="outlined"
+          type="text"
+          label="Email"
+          error={!!errors.email}
+          helperText={errors.email && "Please enter your email/username"}
+          inputProps={register("email", { required: true })}
+        />
+        <TextField
+          fullWidth
           type="password"
           label="Password"
+          error={!!errors.password}
+          helperText={errors.password && "Please enter your password"}
+          inputProps={register("password")}
         />
 
         <Box sx={{ display: "flex" }}>
           <FormControlLabel
-            control={<Checkbox defaultChecked />}
+            control={
+              <Checkbox defaultChecked inputProps={register("rememberMe")} />
+            }
             label="Remember me"
           />
-          <Button variant="contained">Sign in</Button>
+          <Button type="submit" variant="contained">
+            Sign in
+          </Button>
         </Box>
-        <Button variant="contained" startIcon={<FacebookIcon />}>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<FacebookIcon />}
+          onClick={() => loginWithProvider(signInWithFacebook)}
+          sx={{
+            color: "#fff",
+            backgroundColor: "#3b5998",
+          }}
+        >
           Sign in with Facebook
         </Button>
-        <Button variant="contained" startIcon={<GoogleIcon />}>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<GoogleIcon />}
+          onClick={() => loginWithProvider(signInWithGoogle)}
+          sx={{ color: "#fff", backgroundColor: "#4285F4" }}
+        >
           Sign in with google
         </Button>
-        <Link to="/register">
-          <Button color="secondary">Sign up</Button>
+        <Link to="/register" style={{ textDecoration: "none" }}>
+          <Button variant="outlined" color="secondary">
+            Sign up
+          </Button>
         </Link>
       </Paper>
     </Container>
