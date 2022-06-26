@@ -1,4 +1,5 @@
-import { Container, Grid, Box } from "@mui/material";
+import { Link, Outlet } from "react-router-dom";
+import { Container, Grid } from "@mui/material";
 
 import { useAuth } from "src/hooks/useAuth";
 import UserInfo from "src/components/UserInfo";
@@ -10,7 +11,7 @@ function Feed() {
     <Container>
       <Grid container spacing={2}>
         <Grid item xs={8} sx={{ backgroundColor: "yellow" }}>
-          MediaUploader
+          <Link to="/create">MediaUploader</Link>
         </Grid>
         <Grid item xs={4} sx={{ backgroundColor: "orange" }}>
           <UserInfo user={user} onSignOut={signOut} />
@@ -36,6 +37,7 @@ function Feed() {
           Media
         </Grid>
       </Grid>
+      <Outlet />
     </Container>
   );
 }
