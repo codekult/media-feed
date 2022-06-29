@@ -18,11 +18,9 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { LoginFormSchema, LoginFormData } from "src/schema/forms";
 import { useAuth } from "src/hooks/useAuth";
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
-
   const { signInWithEmail, signInWithFacebook, signInWithGoogle } = useAuth();
-
   const {
     register,
     handleSubmit,
@@ -134,5 +132,3 @@ function Login() {
     </Container>
   );
 }
-
-export default Login;

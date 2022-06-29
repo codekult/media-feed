@@ -5,7 +5,7 @@ import Register from "src/routes/Register";
 import Feed from "src/routes/Feed";
 import Create from "src/routes/Create";
 
-function App() {
+export default function App() {
   return (
     <Routes>
       <Route path="login" element={<Login />} />
@@ -16,5 +16,3 @@ function App() {
     </Routes>
   );
 }
-
-export default App;

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 import { useAuth } from "src/hooks/useAuth";
 
-function PrivateRoute({ children }: PropsWithChildren<{}>) {
+export default function PrivateRoute({ children }: PropsWithChildren<{}>) {
   let { user, isAuthReady } = useAuth();
 
   if (!isAuthReady) return <>...Loading</>;
@@ -14,5 +14,3 @@ function PrivateRoute({ children }: PropsWithChildren<{}>) {
 
   return <>{children}</>;
 }
-
-export default PrivateRoute;

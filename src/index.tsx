@@ -7,6 +7,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import App from "src/App";
 import { theme } from "src/utils/theme";
 import { AuthProvider } from "src/hooks/useAuth";
+import { MediaPreviewProvider } from "src/hooks/useMediaPreview";
+import { PostsProvider } from "src/hooks/usePosts";
 import reportWebVitals from "src/reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -18,9 +20,13 @@ root.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <MediaPreviewProvider>
+          <PostsProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </PostsProvider>
+        </MediaPreviewProvider>
       </AuthProvider>
     </ThemeProvider>
   </React.StrictMode>
