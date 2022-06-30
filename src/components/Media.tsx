@@ -1,13 +1,16 @@
-export default function Media({ src }: Pick<HTMLImageElement, "src">) {
-  function onLoad() {
-    // URL.revokeObjectURL(src);
-  }
+interface MediaProps {
+  src: string;
+  shouldRevokeObjectURL?: boolean;
+}
 
+export default function Media({ src, shouldRevokeObjectURL }: MediaProps) {
   return (
     <img
       src={src}
       alt="Media"
-      onLoad={onLoad}
+      onLoad={() => {
+        !!shouldRevokeObjectURL && URL.revokeObjectURL(src);
+      }}
       style={{ maxWidth: "100%", filter: "grayscale(1)" }}
     />
   );

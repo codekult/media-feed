@@ -1,6 +1,6 @@
 import { z, ZodSchema } from "zod";
 
-import { UserPasswordMinChar, PostTextMinChar } from "src/utils/const";
+import { UserPasswordMinChar } from "src/utils/const";
 
 export function trim(pred: ZodSchema<any>) {
   return z.preprocess(
@@ -26,7 +26,7 @@ export const LoginFormSchema = z.object({
 export type LoginFormData = z.infer<typeof LoginFormSchema>;
 
 export const NewPostFormSchema = z.object({
-  text: z.string().min(PostTextMinChar),
+  text: z.string(),
 });
 
 export type NewPostFormData = z.infer<typeof NewPostFormSchema>;

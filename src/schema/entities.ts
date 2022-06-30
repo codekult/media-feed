@@ -3,5 +3,6 @@ export type Post = {
   mediaUrl: string;
   createdAt: number;
   text: string;
-  likes: string[];
+  likesByUserId: { [key: string]: boolean };
+  likesCount: number;
 };

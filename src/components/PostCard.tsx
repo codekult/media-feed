@@ -17,7 +17,7 @@ export default function PostCard({
   userId,
   onToggleLike,
 }: PostCardProps) {
-  const { createdAt, mediaUrl, text, likes } = post;
+  const { createdAt, mediaUrl, text, likesByUserId, likesCount } = post;
 
   return (
     <>
@@ -26,7 +26,7 @@ export default function PostCard({
         <Box sx={{ position: "absolute", bottom: 8, right: 1 }}>
           <LikeButton
             onClick={onToggleLike}
-            isChecked={likes.includes(userId)}
+            isChecked={likesByUserId[userId]}
           />
         </Box>
       </Box>
@@ -34,8 +34,8 @@ export default function PostCard({
         <Typography variant="caption">
           {formatDistance(createdAt, Date.now(), { addSuffix: true })}
         </Typography>
-        <Typography variant="caption">{`${likes.length} ${
-          likes.length === 1 ? "like" : "likes"
+        <Typography variant="caption">{`${likesCount} ${
+          likesCount === 1 ? "like" : "likes"
         }`}</Typography>
       </Box>
       <Typography sx={{ pt: 1, px: 0.5, pb: 6 }}>{text}</Typography>

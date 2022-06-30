@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { v4 as uuid } from "uuid";
+import randomWords from "random-words";
 import {
   Grid,
   Box,
@@ -14,6 +14,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { NewPostFormSchema, NewPostFormData } from "src/schema/forms";
+import { useAuth } from "src/hooks/useAuth";
 import { useMediaPreview } from "src/hooks/useMediaPreview";
 import { usePosts } from "src/hooks/usePosts";
 import Modal from "src/components/Modal";
@@ -23,8 +24,9 @@ import PostImageButton from "src/components/PostImageButton";
 
 export default function Create() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { mediaPreview, setMediaPreview } = useMediaPreview();
-  const { addPost } = usePosts();
+  const { createPost } = usePosts();
   const {
     register,
     handleSubmit,
@@ -34,18 +36,19 @@ export default function Create() {
   });
 
   function onSubmit(data: NewPostFormData) {
-    addPost({
-      id: uuid(),
+    createPost({
       createdAt: Date.now(),
-      mediaUrl: mediaPreview!,
-      likes: [],
+      file: mediaPreview,
+      likesByUserId: { [user!.uid]: false },
+      likesCount: 0,
       ...data,
     });
     navigate("/");
   }
 
-  function onDrop(files: File[]) {
-    setMediaPreview(URL.createObjectURL(files[0]));
+  function onDrop(files: any) {
+    const file = files[0];
+    setMediaPreview(file);
   }
 
   return (
@@ -70,24 +73,25 @@ export default function Create() {
         <DialogContent dividers>
           <Grid container spacing={2}>
             <Grid item xs={5}>
-              <ImageDropZone onDrop={onDrop}>
-                <Box
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                >
-                  {mediaPreview ? (
-                    <Media src={mediaPreview} />
-                  ) : (
-                    <PostImageButton
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        textAlign: "center",
-                      }}
-                    />
-                  )}
-                </Box>
+              <ImageDropZone
+                onDrop={onDrop}
+                sx={{ height: "100%", cursor: "pointer" }}
+              >
+                {mediaPreview ? (
+                  <Media
+                    src={URL.createObjectURL(mediaPreview)}
+                    shouldRevokeObjectURL
+                  />
+                ) : (
+                  <PostImageButton
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      textAlign: "center",
+                      height: "100%",
+                    }}
+                  />
+                )}
               </ImageDropZone>
             </Grid>
             <Grid item xs={7}>
@@ -106,9 +110,9 @@ export default function Create() {
                   fullWidth
                   multiline
                   autoFocus
+                  defaultValue={randomWords({ min: 0, max: 25, join: " " })}
                   placeholder="Enter post text"
-                  minRows={2}
-                  maxRows={10}
+                  rows={5}
                   error={!!errors.text}
                   helperText={errors.text && "Please enter some text"}
                   inputProps={register("text", { required: true })}

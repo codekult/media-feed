@@ -1,14 +1,16 @@
 import { PropsWithChildren, createContext, useState, useContext } from "react";
 
-export type MediaPreviewType = {
-  mediaPreview: string | null;
-  setMediaPreview: React.Dispatch<React.SetStateAction<string | null>>;
+export type MediaPreviewContextType = {
+  mediaPreview: File | null;
+  setMediaPreview: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
-export const MediaPreviewContext = createContext<MediaPreviewType>(null!);
+export const MediaPreviewContext = createContext<MediaPreviewContextType>(
+  null!
+);
 
 export function MediaPreviewProvider(props: PropsWithChildren<{}>) {
-  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<File | null>(null);
 
   return (
     <MediaPreviewContext.Provider value={{ mediaPreview, setMediaPreview }}>

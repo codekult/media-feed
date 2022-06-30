@@ -13,7 +13,7 @@ export default function LikeButton({ onClick, isChecked }: LikeButtonProps) {
       sx={{
         pl: 1.5,
         backgroundColor: "white",
-        opacity: 0.75,
+        opacity: 0.5,
         "&:hover": {
           opacity: 1,
         },
@@ -24,7 +24,7 @@ export default function LikeButton({ onClick, isChecked }: LikeButtonProps) {
           <Checkbox
             icon={<FavoriteBorderIcon />}
             checkedIcon={<FavoriteIcon />}
-            checked={isChecked}
+            checked={!!isChecked}
             onChange={onClick}
           />
         }

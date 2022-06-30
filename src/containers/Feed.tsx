@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { Container, Grid, Box } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 
 import { useAuth } from "src/hooks/useAuth";
 import { useMediaPreview } from "src/hooks/useMediaPreview";
@@ -17,31 +17,32 @@ export default function Feed() {
   const { setMediaPreview } = useMediaPreview();
   const { posts, toggleLike } = usePosts();
 
-  function onDrop(files: File[]) {
-    setMediaPreview(URL.createObjectURL(files[0]));
+  function onDrop(files: any) {
+    const file = files[0];
+    setMediaPreview(file);
     navigate("/create");
   }
 
   return (
     <Container sx={{ my: 2 }}>
       <Grid container spacing={2} columnSpacing={8}>
-        <Grid item xs={8}>
-          <ImageDropZone onDrop={onDrop}>
-            <PostImageButton fullWidth size="large" />
+        <Grid item xs={12} sm={6} md={8}>
+          <ImageDropZone onDrop={onDrop} sx={{ height: "100%" }}>
+            <PostImageButton fullWidth size="large" sx={{ height: "100%" }} />
           </ImageDropZone>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <UserInfo user={user} onSignOut={signOut} />
           <SearchBar />
         </Grid>
 
         {!!user && !!posts.length ? (
           posts.map((post) => (
-            <Grid item xs={4} key={post.id}>
+            <Grid item xs={12} sm={6} md={4} key={post.id}>
               <PostCard
                 post={post}
                 userId={user.uid}
-                onToggleLike={() => toggleLike(user.uid, post.id)}
+                onToggleLike={() => toggleLike(user.uid, post)}
               />
             </Grid>
           ))
